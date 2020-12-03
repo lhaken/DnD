@@ -1,0 +1,1 @@
+entity_name, HP, DMG, armor class, speed, atributes, .roll(), .attack(), .move(), .action(), .runaway()

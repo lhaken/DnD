@@ -1,0 +1,1 @@
+player_name, race, class, HP, DMG,  armor class, speed, atributes, .roll(), .attack(), .move(), .rest(), .action(), inventory
