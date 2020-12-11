@@ -1,3 +1,5 @@
+import random
+
 def hasNumber(string):
     for character in string:
         if character.isdigit():
@@ -15,7 +17,7 @@ def isNumber(integer):
 
 dmgTypes = ["NONE", "PHYSICAL", "MAGIC", "FIRE", "WATER", "PIERCING"]
 
-class entity:     
+class entity:
     def createEntity(self):
         self.name = input("Jméno bytosti > ")
         while hasNumber(self.name):
@@ -54,14 +56,17 @@ class entity:
             self.dmgResist= input("Jaký je typ poškození bytosti? > ")
 
         #finish abilities and weakness
+            
+    def findEntity(self):
+        file = open("entities.txt", "r")
 
     def saveEntity(self):
         entitiesFile = open("entities.txt", "a+")
         entitiesFile.write("${}\nlevel:{}\nHP:{}\nDMG:{}\nspeed:{}\narmor class:{}\nresist:{}\n\n".format(self.name, self.level, self.hp, self.dmg, self.speed, self.armorClass, self.dmgResist))
 
         entitiesFile.close()
-
-addEntity = entity()
-addEntity.createEntity()
-addEntity.saveEntity()
+if __name__ == "__main__":
+    addEntity = entity()
+    addEntity.createEntity()
+    addEntity.saveEntity()
         
