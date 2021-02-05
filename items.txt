@@ -1,1 +1,4 @@
-item_name, type, count, atributes, cost, weight, .use(), .sell(), .discard()
+$dýka;
+type:WEAPON;
+level:1;
+ability:STRENGTH +1

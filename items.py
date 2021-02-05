@@ -13,7 +13,7 @@ def isNumber(integer):
     except ValueError:
         return False
 
-abilities = ["NONE", "STRENGHT", "SPEED", "HP", "ARMOR"]
+abilities = ["NONE", "STRENGTH", "SPEED", "HP", "ARMOR"]
 types = ["ONETIME", "POTION", "ARMOR", "WEAPON", "ADD ON"]
 
 class item:     
@@ -22,7 +22,7 @@ class item:
         self.ability = input("Jaká je schopnost předmětu? > ")
         if self.ability.upper() not in abilities:
             print("ERROR - Schopnost není v nabídce. Prosím zkuste to znovu.")
-            fAbility()
+            self.fAbility()
         else:
             if self.ability.upper() == "NONE":
                 self.bonus = 0
@@ -55,14 +55,40 @@ class item:
 
     def saveItem(self):
         itemsFile = open("items.txt", "a+")
-        itemsFile.write("${}\ntype:{}\nlevel:{}\nability:{} +{}\n".format(self.name, self.itemType.upper(), self.level, self.ability.upper(), self.bonus))
+        itemsFile.write("${};\ntype:{};\nlevel:{};\nability:{} +{}\n".format(self.name, self.itemType.upper(), self.level, self.ability.upper(), self.bonus))
         itemsFile.close()
-
-addItem = item()
-addItem.createItem()
-addItem.saveItem()
-
         
+class pickItem:
+    def findItem(self, name):
+        file = open("items.txt", "r")
+        allItems = file.read()
+        sortedItems = allItems.split("$")
+        for i in sortedItems:
+            if i.split(";")[0] == name:
+                self.name = name
+                self.type = i.split(";")[1].split(":")[1]
+                self.lvl = int(i.split(";")[2].split(":")[1])
+                rawAbility = i.split(";")[3].split(":")[1]
+                self.ability = rawAbility.split(" ")[0]
+                self.bonus = int(rawAbility.split(" ")[1])
+                file.close()
+                return True
+        else:
+            file.close()
+            return False
 
+    
+if __name__ == "__main__":
+    addItem = item()
+    addItem.createItem()
+    addItem.saveItem()
+
+
+#item = pickItem()
+#if item.findItem("dýka"):
+#    print(item.ability)
+#    print(item.bonus)
+#else:
+#    print("item not found")
         
             

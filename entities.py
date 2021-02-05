@@ -56,17 +56,36 @@ class entity:
             self.dmgResist= input("Jaký je typ poškození bytosti? > ")
 
         #finish abilities and weakness
-            
-    def findEntity(self):
+
+        def saveEntity(self):
+            entitiesFile = open("entities.txt", "a+")
+            entitiesFile.write("${};\nlevel:{};\nHP:{};\nDMG:{};\nspeed:{};\narmor class:{};\nresist:{}\n".format(self.name, self.level, self.hp, self.dmg, self.speed, self.armorClass, self.dmgResist))
+            entitiesFile.close()
+                
+class activeEnemy:
+    def findEntity(self, name):
         file = open("entities.txt", "r")
-
-    def saveEntity(self):
-        entitiesFile = open("entities.txt", "a+")
-        entitiesFile.write("${}\nlevel:{}\nHP:{}\nDMG:{}\nspeed:{}\narmor class:{}\nresist:{}\n\n".format(self.name, self.level, self.hp, self.dmg, self.speed, self.armorClass, self.dmgResist))
-
-        entitiesFile.close()
+        allEntities = file.read()
+        sortedEntities = allEntities.split("$")
+        for e in sortedEntities:
+            if e.split(";")[0] == name:
+                self.name = name
+                self.hp = int(e.split(";")[2].split(":")[1])
+                self.dmg = int(e.split(";")[3].split(":")[1])
+                self.speed = int(e.split(";")[4].split(":")[1])
+                file.close()
+                return True
+        else:
+            file.close()
+            return False
+        
 if __name__ == "__main__":
     addEntity = entity()
     addEntity.createEntity()
     addEntity.saveEntity()
-        
+
+#enemy = activeEnemy()      
+#if enemy.findEntity("player"):
+#    print(enemy.hp)
+#else:
+#    print("no entity found")

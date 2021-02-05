@@ -1,1 +1,14 @@
-entity_name, Lvl, HP, DMG, armor class, speed, atributes, .roll(), .attack(), .move(), .action(), .runaway()
+$player;
+level:1;
+HP:10;
+DMG:2;
+speed:5;
+armor class:0;
+resist:none
+$goblin;
+level:1;
+HP:6;
+DMG:1;
+speed:2;
+armor class:0;
+resist:none
