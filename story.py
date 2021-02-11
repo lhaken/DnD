@@ -13,18 +13,18 @@ print(" ")
 # inventory will be saved into a txt file - beta inventory not saving -> also will be checked if all the bonuses from weapons are still active -> if you sell a weapon bonus must be cancelled
 
 def initPlayer():
-    global playerHP
-    global playerDMG
-    global playerSPD
+    
+    global player
+    
     global inventory
 
     inventory = []
     
     player = entities.activeEnemy()
     player.findEntity("player")
-    playerHP = int(player.hp)
-    playerDMG = int(player.dmg)
-    playerSPD = int(player.speed)
+    player.hp = int(player.hp)
+    player.dmg = int(player.dmg)
+    player.spd = int(player.speed)
 
 def roll():
     global playerRoll
@@ -40,90 +40,72 @@ def decision():
     print(" ")
     
 def fight(entity):
-    global playerHP
-    global playerDMG
-    global playerSPD
+    
+    global player
+    
     global keyTaken
     global goblinSlayed
     global doorsUnlocked
+    global enemy
     
     roll()
     enemy = entities.activeEnemy()
     enemy.findEntity(entity)
     if playerRoll >= enemyRoll:
-        while playerHP > 0 and enemy.hp > 0:
-            action = input("-zaútočit-, -krýt- >> ")
-            if action == "krýt":
-                pass
-            elif action == "zaútočit":
-                enemyDodge = random.randint(0, 20)
-                playerDodge = random.randint(0, 20)
-                if enemyDodge < enemy.speed:
-                    print("Tvůj útok minul.")
-                else:
-                    enemy.hp -= playerDMG
-                    print(enemy.name.capitalize() + " od tebe dostává " + str(playerDMG) + " poškození.")
-                    print("ŽIVOTY Hráč - " + str(playerHP) + " <3 Nepřítel - " + str(enemy.hp) + " <3")
-                    if enemy.hp <= 0:
-                        print(enemy.name.capitalize() + " byl poražen! Gratuluji!")
-                        goblinSlayed = True
-                        return
-                    else:
-                        pass
-                if playerDodge < playerSPD:
-                    print(enemy.name.capitalize() + " netrefil svůj útok.")
-                else:
-                    playerHP -= enemy.dmg
-                    print(enemy.name.capitalize() + " ti dává " + str(enemy.dmg) + " poškození.")
-                    print("ŽIVOTY Hráč - " + str(playerHP) + " <3 Nepřítel - " + str(enemy.hp) + " <3")
-                    if enemy.hp <= 0:
-                        print("Prohrál jsi!")
-                        restart()
-                    else:
-                        pass
-            else:
-                print("Špatný tah. " + enemy.name.capitalize() + " na tebe útočí!")
-                playerHP -= enemy.dmg
-                print(enemy.name.capitalize() + " ti dává " + str(enemy.dmg) + " poškození.")
-                print("ŽIVOTY Hráč - " + str(playerHP) + " <3 Nepřítel - " + str(enemy.hp) + " <3")
-    elif playerRoll < enemyRoll:
-        while playerHP > 0 and enemy.hp > 0:
+        while player.hp > 0 and enemy.hp > 0:
             action = input("-zaútočit-, -krýt- >> ")
             if action == "krýt":
                 print("Vykryl jsi útok.")
-                print("ŽIVOTY Hráč - " + str(playerHP) + " <3 Nepřítel - " + str(enemy.hp) + " <3")
+                print("ŽIVOTY Hráč - " + str(player.hp) + " ♥ Nepřítel - " + str(enemy.hp) + " ♥")
+                print(" ")
             elif action == "zaútočit":
-                enemyDodge = random.randint(0, 20)
-                playerDodge = random.randint(0, 20)
-                if playerDodge < playerSPD:
-                    print("Tvůj útok minul.")
-                else:
-                    playerHP -= enemy.dmg
-                    print(enemy.name.capitalize() + " ti dává " + str(enemy.dmg) + " poškození.")
-                    print("ŽIVOTY Hráč - " + str(playerHP) + " <3 Nepřítel - " + str(enemy.hp) + " <3")
-                    if enemy.hp <= 0:
-                        print("Prohrál jsi!")
-                        restart()
-                    else:
-                        pass
-                if enemyDodge < enemy.speed:
-                    print("Tvůj útok minul.")
-                else:
-                    enemy.hp -= playerDMG
-                    print(enemy.name.capitalize() + " od tebe dostává " + str(playerDMG) + " poškození.")
-                    print("ŽIVOTY Hráč - " + str(playerHP) + " <3 Nepřítel - " + str(enemy.hp) + " <3")
-                    if enemy.hp <= 0:
-                        print(enemy.name.capitalize() + " byl poražen! Gratuluji!")
-                        goblinSlayed = True
-                        return
-                    else:
-                        pass
+                round(player, enemy)
+                round(enemy, player)
             else:
                 print("Špatný tah. " + enemy.name.capitalize() + " na tebe útočí!")
+                player.hp -= enemy.dmg
                 print(enemy.name.capitalize() + " ti dává " + str(enemy.dmg) + " poškození.")
-                print("ŽIVOTY Hráč - " + str(playerHP) + " <3 Nepřítel - " + str(enemy.hp) + " <3")
+                print("ŽIVOTY Hráč - " + str(player.hp) + " ♥ Nepřítel - " + str(enemy.hp) + " ♥")
+    elif playerRoll < enemyRoll:
+        while player.hp > 0 and enemy.hp > 0:
+            action = input("-zaútočit-, -krýt- >> ")
+            if action == "krýt":
+                print("Vykryl jsi útok.")
+                print("ŽIVOTY Hráč - " + str(player.hp) + " ♥ Nepřítel - " + str(enemy.hp) + " ♥")
+                print(" ")
+            elif action == "zaútočit":
+                round(enemy, player)
+                round(player, enemy)
+            else:
+                print("Špatný tah. " + enemy.name.capitalize() + " na tebe útočí!")
+                player.hp -= enemy.dmg
+                print(enemy.name.capitalize() + " ti dává " + str(enemy.dmg) + " poškození.")
+                print("ŽIVOTY Hráč - " + str(player.hp) + " ♥ Nepřítel - " + str(enemy.hp) + " ♥")
+                print(" ")
     else:
         print("Unknown error")
+
+def round(attacker, defender):
+    global goblinSlayed
+    
+    dodge1 = random.randint(0, 20)
+    dodge2 = random.randint(0, 20)
+    if player.hp > 0 and enemy.hp > 0:
+        if dodge1 < defender.speed:
+            print("Útok minul.")
+        else:
+            defender.hp -= attacker.dmg
+            print(defender.name.capitalize() + " dostává " + str(attacker.dmg) + " poškození.")
+            print("ŽIVOTY Hráč - " + str(player.hp) + " ♥ Nepřítel - " + str(enemy.hp) + " ♥")
+            print(" ")
+            if defender.hp <= 0:
+                print(defender.name.capitalize() + " byl zabit!")
+                goblinSlayed = True
+                return
+            else:
+                pass
+    else:
+        pass
 
 def room1():
     global inventory
@@ -185,9 +167,7 @@ def room1():
                 print("Dveře jsou zamknuté. Asi budeš potřebovat nějaký klíč.")
                 room1()
 def story():
-    global playerHP
-    global playerDMG
-    global playerSPD
+    global player
     global keyTaken
     global goblinSlayed
     global doorsUnlocked
@@ -218,9 +198,9 @@ def story():
                     item = items.pickItem()
                     item.findItem("dýka")
                     if item.ability == "STRENGTH":
-                        playerDMG += item.bonus
+                        player.dmg += item.bonus
                     elif item.ability == "HP":
-                        playerHP += item.bonus
+                        player.hp += item.bonus
                     elif item.ability == "SPEED":
                         playerSPD += item.bonus       
                     else:
@@ -235,7 +215,7 @@ def story():
                 room1()
 
 def restart():
-    rstrt = input("Přeješ si hru restartovat? (a/n) >>")
+    rstrt = input("Přeješ si hru restartovat? (a/n) >> ")
     if rstrt == "a":
         initPlayer()
         story()
